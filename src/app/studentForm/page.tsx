@@ -17,12 +17,12 @@ const formSchema = z.object({
     department: z.string().min(2, {
         message: "Department name must be at least 2 characters.",
     }),
-    cgpa: z.number().min(1, {
+    cgpa: z.string().min(1, {
         message: "CGPA must be at least 1.",
     }).max(10, {
         message: "CGPA must be at most 10.",
     }),
-    rank: z.number().min(1, {
+    rank: z.string().min(1, {
         message: "Rank must be at least 1.",
     }).max(5000, {
         message: "Rank must be at most 5000.",
@@ -36,8 +36,8 @@ export default function StudentForm() {
             name: "",
             group: "",
             department: "",
-            cgpa: 1,
-            rank: 1,
+            cgpa: "0",
+            rank: "0",
         },
     })
 
