@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "shadcn-ui";
+import { Button } from "../../components/ui/button";
 
 export default function RegisterPage() {
   const [userType, setUserType] = useState<"student" | "alumni" | null>(null);
@@ -49,8 +49,8 @@ export default function RegisterPage() {
 
   if (!userType) {
     return (
-      <div className="flex justify-center items-center h-screen"></div>
-        <div className="space-x-4"></div>
+      <div className="flex justify-center items-center h-screen">
+        <div className="space-x-4">
           <Button onClick={() => setUserType("student")} className="bg-blue-500 text-white py-2 px-4 rounded">
             Student
           </Button>
