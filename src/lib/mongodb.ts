@@ -7,15 +7,18 @@ if (!MONGODB_URI) {
 }
 
 async function dbConnect() {
-  if (!MONGODB_URI) {
-    throw new Error('MONGODB_URI is not defined');
+  if (mongoose.connection.readyState >= 1) {
+    console.log('Already connected to MongoDB');
+    return mongoose.connection;
   }
+
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI as string);
     console.log('MongoDB connected successfully');
+    return mongoose.connection; // ✅ Return connection
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    process.exit(1); // Exit the process if connection fails
+    throw new Error('Failed to connect to MongoDB');
   }
 }
 
