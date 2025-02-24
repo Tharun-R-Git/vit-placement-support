@@ -1,6 +1,9 @@
 "use client";
-
 import { useState } from "react";
+import { Input } from "../../components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
+import { Button } from "../../components/ui/button";
+import { Label } from "../../components/ui/label";
 
 export default function AlumniForm() {
   const [year, setYear] = useState("");
@@ -19,19 +22,19 @@ export default function AlumniForm() {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md">
-        <h2 className="text-2xl font-serif text-center font-bold text-blue-500  mb-4">Alumni Form</h2>
+        <h2 className="text-2xl font-serif text-center font-bold text-blue-500 mb-4">Alumni Form</h2>
         <div className="mb-4">
-          <label className="block text-gray-700">Year of Placement</label>
-          <input
+          <Label className="block text-gray-700">Year of Placement</Label>
+          <Input
             type="date"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border rounded w-1/4"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Company</label>
-          <input
+          <Label className="block text-gray-700">Company</Label>
+          <Input
             type="text"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
@@ -39,17 +42,17 @@ export default function AlumniForm() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">CTC</label>
-          <input
+          <Label className="block text-gray-700">CTC</Label>
+          <Input
             type="number"
             value={ctc}
             onChange={(e) => setCtc(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border rounded w-1/4"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Eligibility Criteria</label>
-          <input
+          <Label className="block text-gray-700">Eligibility Criteria</Label>
+          <Input
             type="text"
             value={eligibility}
             onChange={(e) => setEligibility(e.target.value)}
@@ -57,28 +60,27 @@ export default function AlumniForm() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Number of Rounds Attended</label>
-          <input
+          <Label className="block text-gray-700">Number of Rounds Attended</Label>
+          <Input
             type="number"
             value={rounds}
             onChange={(e) => setRounds(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border rounded w-1/4"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Experience Description</label>
-          <textarea
+          <Label className="block text-gray-700">Experience Description</Label>
+          <Textarea
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border rounded w-full h-32"
           />
         </div>
         <div className="flex justify-center">
-            <button type="submit" className="bg-blue-500 hover:scale-110 transform transition-transform duration-300 text-white p-2 rounded">
+          <Button type="submit" className="bg-blue-500 hover:scale-110 transform transition-transform duration-300 text-white p-2 rounded">
             Submit
-            </button>
+          </Button>
         </div>
-        
       </form>
     </div>
   );
