@@ -19,18 +19,49 @@ export default function LearningContent() {
           <AccordionItem key={week} value={`week-${week}`}>
             <AccordionTrigger>Week {week}</AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-8">
-                <MCQSet title="CS Fundamentals" weekNumber={week} setType="cs" />
-                <MCQSet title="Data Structures and Algorithms" weekNumber={week} setType="dsa" />
-                <MCQSet title="Aptitude" weekNumber={week} setType="aptitude" />
-                <VideoSection weekNumber={week} />
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold">DSA Coding Questions</h3>
-                  {Array.from({ length: 5 }, (_, i) => i + 1).map((questionNumber) => (
-                    <CodingQuestion key={questionNumber} weekNumber={week} questionNumber={questionNumber} />
-                  ))}
-                </div>
-              </div>
+              <Accordion type="multiple" collapsible>
+                <AccordionItem value={`mcq-${week}`}>
+                  <AccordionTrigger>MCQs</AccordionTrigger>
+                  <AccordionContent>
+                    <Accordion type="multiple" collapsible>
+                      <AccordionItem value={`mcq-cs-${week}`}>
+                        <AccordionTrigger>CS Fundamentals</AccordionTrigger>
+                        <AccordionContent>
+                          <MCQSet title="CS Fundamentals" weekNumber={week} setType="cs" />
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value={`mcq-dsa-${week}`}>
+                        <AccordionTrigger>Data Structures and Algorithms</AccordionTrigger>
+                        <AccordionContent>
+                          <MCQSet title="Data Structures and Algorithms" weekNumber={week} setType="dsa" />
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value={`mcq-aptitude-${week}`}>
+                        <AccordionTrigger>Aptitude</AccordionTrigger>
+                        <AccordionContent>
+                          <MCQSet title="Aptitude" weekNumber={week} setType="aptitude" />
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value={`video-${week}`}>
+                  <AccordionTrigger>Video Lectures</AccordionTrigger>
+                  <AccordionContent>
+                    <VideoSection weekNumber={week} />
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value={`coding-${week}`}>
+                  <AccordionTrigger>DSA Coding Questions</AccordionTrigger>
+                  <AccordionContent>
+                    {Array.from({ length: 5 }, (_, i) => i + 1).map((questionNumber) => (
+                      <CodingQuestion key={questionNumber} weekNumber={week} questionNumber={questionNumber} />
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </AccordionContent>
           </AccordionItem>
         ))}
@@ -38,4 +69,3 @@ export default function LearningContent() {
     </div>
   )
 }
-
