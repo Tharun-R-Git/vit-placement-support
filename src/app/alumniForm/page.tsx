@@ -1,87 +1,173 @@
-"use client";
-import { useState } from "react";
-import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
-import { Button } from "../../components/ui/button";
-import { Label } from "../../components/ui/label";
+"use client"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+
+const currentYear = new Date().getFullYear()
+
+const formSchema = z.object({
+  year: z.string().refine(
+    (val) => {
+      const yearNum = Number.parseInt(val, 10)
+      return !isNaN(yearNum) && yearNum >= 1900 && yearNum <= currentYear
+    },
+    {
+      message: `Year must be between 1900 and ${currentYear}.`,
+    },
+  ),
+  company: z.string().min(2, {
+    message: "Company name must be at least 2 characters.",
+  }),
+  ctcFixed: z.string().min(1, {
+    message: "Please enter the fixed CTC.",
+  }),
+  ctcBonus: z.string().optional(),
+  eligibility: z.string().min(2, {
+    message: "Eligibility criteria must be at least 2 characters.",
+  }),
+  rounds: z.string().min(1, {
+    message: "Please enter the number of rounds.",
+  }),
+  experience: z.string().min(10, {
+    message: "Experience description must be at least 10 characters.",
+  }),
+})
 
 export default function AlumniForm() {
-  const [year, setYear] = useState("");
-  const [company, setCompany] = useState("");
-  const [ctc, setCtc] = useState("");
-  const [eligibility, setEligibility] = useState("");
-  const [rounds, setRounds] = useState("");
-  const [experience, setExperience] = useState("");
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      year: "",
+      company: "",
+      ctcFixed: "",
+      ctcBonus: "",
+      eligibility: "",
+      rounds: "",
+      experience: "",
+    },
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values)
     // Handle form submission logic here
-    console.log({ year, company, ctc, eligibility, rounds, experience });
-  };
+  }
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md">
-        <h2 className="text-2xl font-serif text-center font-bold text-blue-500 mb-4">Alumni Form</h2>
-        <div className="mb-4">
-          <Label className="block text-gray-700">Year of Placement</Label>
-          <Input
-            type="date"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-            className="mt-1 p-2 border rounded w-1/4"
+    <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <h2 className="text-3xl font-sans text-center font-bold text-primary mb-8">Alumni Experience Form</h2>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="year"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Year of Placement</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder={`Enter year (1900-${currentYear})`} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="mb-4">
-          <Label className="block text-gray-700">Company</Label>
-          <Input
-            type="text"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
+          <FormField
+            control={form.control}
+            name="company"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter company name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="mb-4">
-          <Label className="block text-gray-700">CTC</Label>
-          <Input
-            type="number"
-            value={ctc}
-            onChange={(e) => setCtc(e.target.value)}
-            className="mt-1 p-2 border rounded w-1/4"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="ctcFixed"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fixed CTC</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="Enter fixed CTC" {...field} />
+                  </FormControl>
+                  <FormDescription>Annual fixed component of your CTC</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="ctcBonus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bonus/Variable CTC</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="Enter bonus/variable CTC" {...field} />
+                  </FormControl>
+                  <FormDescription>Annual bonus or variable component (if any)</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            control={form.control}
+            name="eligibility"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Eligibility Criteria</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter eligibility criteria" {...field} />
+                </FormControl>
+                <FormDescription>E.g., "Minimum 7 CGPA, No active backlogs"</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="mb-4">
-          <Label className="block text-gray-700">Eligibility Criteria</Label>
-          <Input
-            type="text"
-            value={eligibility}
-            onChange={(e) => setEligibility(e.target.value)}
-            className="mt-1 p-2 border rounded w-full"
+          <FormField
+            control={form.control}
+            name="rounds"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Number of Rounds Attended</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter number of rounds" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="mb-4">
-          <Label className="block text-gray-700">Number of Rounds Attended</Label>
-          <Input
-            type="number"
-            value={rounds}
-            onChange={(e) => setRounds(e.target.value)}
-            className="mt-1 p-2 border rounded w-1/4"
+          <FormField
+            control={form.control}
+            name="experience"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Experience Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Share your interview experience and any tips for future candidates"
+                    className="min-h-[150px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="mb-4">
-          <Label className="block text-gray-700">Experience Description</Label>
-          <Textarea
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
-            className="mt-1 p-2 border rounded w-full h-32"
-          />
-        </div>
-        <div className="flex justify-center">
-          <Button type="submit" className="bg-blue-500 hover:scale-110 transform transition-transform duration-300 text-white p-2 rounded">
+          <Button type="submit" className="w-full">
             Submit
           </Button>
-        </div>
-      </form>
+        </form>
+      </Form>
     </div>
-  );
+  )
 }
+
