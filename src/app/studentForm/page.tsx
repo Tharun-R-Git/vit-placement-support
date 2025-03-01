@@ -2,11 +2,29 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import { useState } from "react"
+import Modal from "react-modal"
 
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import "react-toastify/dist/ReactToastify.css"
+import React from "react"
+Modal.setAppElement("#__next")
 
+const customStyles = {
+    content: {
+        top: "50%",
+        left: "50%",
+        right: "auto",
+        bottom: "auto",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)",
+    },
+    overlay: {
+        backgroundColor: "rgba(0, 0, 0, 0.75)",
+    },
+}
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Name must be at least 2 characters.",
@@ -30,6 +48,8 @@ const formSchema = z.object({
 })
 
 export default function StudentForm() {
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -49,6 +69,7 @@ export default function StudentForm() {
         }
         console.log(parsedValues)
         // Handle form submission logic here
+        setModalIsOpen(true)
     }
 
     return (
@@ -126,6 +147,18 @@ export default function StudentForm() {
                     </Button>
                 </form>
             </Form>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                contentLabel="Success Modal"
+                className="modal"
+                overlayClassName="overlay"
+            >
+                <h2>Success</h2>
+                <p>Form submitted successfully!</p>
+                <Button onClick={() => setModalIsOpen(false)}>Close</Button>
+            </Modal>
         </div>
     )
 }
