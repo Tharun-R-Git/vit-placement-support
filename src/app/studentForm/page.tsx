@@ -7,16 +7,23 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import SuccessModal from "@/components/successFile";
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  group: z.string().min(1, {
-    message: "Please enter your group.",
+  rollNumber: z.string().min(1, {
+    message: "Roll number is required.",
+  }),
+  email: z.string().email({
+    message: "Invalid email format.",
   }),
   department: z.string().min(2, {
     message: "Department name must be at least 2 characters.",
+  }),
+  branch: z.string().min(2, {
+    message: "Branch name must be at least 2 characters.",
   }),
   cgpa: z
     .string()
@@ -26,14 +33,6 @@ const formSchema = z.object({
     .max(10, {
       message: "CGPA must be at most 10.",
     }),
-  rank: z
-    .string()
-    .min(1, {
-      message: "Rank must be at least 1.",
-    })
-    .max(5000, {
-      message: "Rank must be at most 5000.",
-    }),
 });
 
 export default function StudentForm() {
@@ -42,10 +41,11 @@ export default function StudentForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      group: "",
+      rollNumber: "",
+      email: "",
       department: "",
+      branch: "",
       cgpa: "0",
-      rank: "0",
     },
   });
 
@@ -53,7 +53,6 @@ export default function StudentForm() {
     const parsedValues = {
       ...values,
       cgpa: Number(values.cgpa),
-      rank: Number(values.rank),
     };
     console.log(parsedValues);
     // Handle form submission logic here
@@ -78,24 +77,43 @@ export default function StudentForm() {
               </FormItem>
             )}
           />
+          <div className="flex justify-evenly">
+        <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+            <FormItem  className="flex-1 pr-12">
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                <Input type="email" placeholder="Enter your email" {...field} />
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+            )}
+        />
           <FormField
             control={form.control}
-            name="group"
+            name="rollNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Group</FormLabel>
+                <FormLabel>Roll Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your group" {...field} />
+                  <Input placeholder="Enter your roll number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          
+          </div>
+
+            <div className="flex justify-evenly">
+
           <FormField
             control={form.control}
             name="department"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex-1 pr-6">
                 <FormLabel>Department</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter your department" {...field} />
@@ -104,6 +122,22 @@ export default function StudentForm() {
               </FormItem>
             )}
           />
+        
+          <FormField
+            control={form.control}
+            name="branch"
+            render={({ field }) => (
+              <FormItem className="flex-1 pl-6">
+                <FormLabel>Branch</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your branch" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+            </div>
+        
           <FormField
             control={form.control}
             name="cgpa"
@@ -117,35 +151,16 @@ export default function StudentForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="rank"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Rank</FormLabel>
-                <FormControl>
-                  <Input type="number" min="1" max="5000" placeholder="Enter your rank" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <Button type="submit" className="w-full">
             Submit
           </Button>
         </form>
       </Form>
-      {showSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-md text-center">
-            <h3 className="text-2xl font-bold mb-4">Success!</h3>
-            <p className="mb-4">Your form has been submitted successfully.</p>
-            <Button onClick={() => setShowSuccess(false)} className="bg-blue-500 text-white py-2 px-4 rounded">
-              Close
-            </Button>
-          </div>
-        </div>
-      )}
+      <SuccessModal
+        show={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        message="Your student details have been submitted successfully."
+      />
     </div>
   );
 }
